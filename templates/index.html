@@ -5,8 +5,100 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="../static/styles.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+        function onAndOff() {
+            if($("#formContainer").css('display') === 'flex'){
+                $("#formContainer").hide()
+                $("#onAndOffButton").text("등록 폼 열기")
+            }
+            else{
+                $("#formContainer").show()
+                $("#onAndOffButton").text("등록 폼 닫기")
+            }
+        }
+
+        function onSubmit(){
+            const title = $("#formTitle").val();
+            const contents = $("#formContents").val();
+            const startTime = $("#formStart").val();
+            const endTime = $("#formEnd").val();
+            const ext = $("#formExt").val();
+            const importance = $('input[name="radioText"]:checked').val();
+
+            const result = {
+                title,
+                contents,
+                startTime,
+                endTime,
+                ext,
+                importance,
+            }
+            console.log('🚗🚗🚗🚗🚗', result)
+
+            $("#formTitle").val("")
+            $("#formContents").val("");
+            $("#formStart").val("");
+            $("#formEnd").val("");
+            $("#formExt").val("");
+            $('input[name="radioText"]:checked').val("");
+        }
+    </script>
 </head>
 <body>
-    <h1>hello</h1>
+    <div class="container">
+        <div class="cardContainer">
+            <!-- HEADER -->
+            <div class="headerContainer">
+                <h1>TODO LIST</h1>
+            </div>
+            <!-- MIDDLE -->
+            <div class="middleContainer">
+                <button id="onAndOffButton" onclick="onAndOff()">등록하기</button>
+                <div id="formContainer" class="formContainer">
+                    <h3>할 일 등록하기</h3>
+                    <div style="display: flex; flex-direction: column;">
+                        <label for="formTitle">제목</label>
+                        <input type="text" id="formTitle"> 
+                        <label for="formContents">내용</label>
+                        <textarea id="formContents"></textarea> 
+                        <div>
+                            <label for="formStart">시작</label>
+                            <input type="date" id="formStart">
+                            <label for="formEnd">마감</label>
+                            <input type="date" id="formEnd">
+                        </div>
+                        <label for="formImportance">우선순위</label>
+                        <div style="display: flex;">
+                            <div>
+                                <input type="radio" id="formImportance1" value="1" name="radioText">
+                                <label for="formImportance1">예정</label>
+                            </div>
+                            <div>
+                                <input type="radio" id="formImportance2" value="2" name="radioText">
+                                <label for="formImportance2">진행중</label>
+                            </div>
+                            <div>
+                                <input type="radio" id="formImportance3" value="3" name="radioText">
+                                <label for="formImportance3">완료</label>
+                            </div>
+                            <div>
+                                <input type="radio" id="formImportance4" value="4" name="radioText">
+                                <label for="formImportance4">포기</label>
+                            </div>
+                        </div>
+                        <label for="formExt">기타</label>
+                        <input type="text" id="formExt">
+                        <button onclick="onSubmit()">등록</button>
+                    </div>
+                </div>
+            </div>
+            <!-- BOTTOM -->
+            <div class="bottomeContainer">
+
+            </div>
+        </div>
+    </div>
 </body>
 </html>

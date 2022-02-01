@@ -1,0 +1,33 @@
+.container {
+  background: linear-gradient(rgb(72, 157, 255), rgb(43, 27, 99));
+  position: fixed;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  min-height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.cardContainer {
+  background-color: whitesmoke;
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px 6px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+.headerContainer {
+  display: flex;
+}
+.middleContainer {
+  display: flex;
+  flex-direction: column;
+}
+.bottomeContainer {
+  display: flex;
+}
+.formContainer {
+  display: flex;
+  flex-direction: column;
+}
