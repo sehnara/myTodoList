@@ -8,8 +8,13 @@
     <link rel="stylesheet" type="text/css" href="../static/styles.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script>
+        $(document).ready(function(){
+            // $("#cardContainer").html('');
+            onRead();
+        })
+
         function onAndOff() {
-            if($("#formContainer").css('display') === 'flex'){
+            if($("#formContainer").css('display') === 'block'){
                 $("#formContainer").hide()
                 $("#onAndOffButton").text("등록 폼 열기")
             }
@@ -19,23 +24,27 @@
             }
         }
 
+        // 쓰고 저장
         function onSubmit(){
             const title = $("#formTitle").val();
             const contents = $("#formContents").val();
             const startTime = $("#formStart").val();
             const endTime = $("#formEnd").val();
             const ext = $("#formExt").val();
-            const importance = $('input[name="radioText"]:checked').val();
-
-            const result = {
-                title,
-                contents,
-                startTime,
-                endTime,
-                ext,
-                importance,
-            }
-            console.log('🚗🚗🚗🚗🚗', result)
+            const importance = $('input[name="radioText"]:checked').val();            
+            
+            $.ajax({
+                type:"POST",
+                url:"/todo/write",
+                data :{'title' : title, 'contents' : contents, 'startTime' : startTime, 'endTime': endTime, 'ext':ext, 'importance' : importance, 'success' : false},
+                success:function(response){
+                    if(response["result"] == "success"){
+                        alert(`'${title}'을 등록했습니다.`)
+                        // 새로고침
+                        window.location.reload()
+                    }
+                }
+            })
 
             $("#formTitle").val("")
             $("#formContents").val("");
@@ -43,6 +52,68 @@
             $("#formEnd").val("");
             $("#formExt").val("");
             $('input[name="radioText"]:checked').val("");
+        }
+
+        // 읽기
+        function onRead() {
+            $('#cardContainer').empty();
+            $.ajax({
+                type:"GET",
+                url:"/todo/read",
+                data :{},
+                success:function(response){
+                    if(response["result"] == "success"){
+                        response['todos'].map(item => {
+                            const todoCard = `<li>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span style="flex: 1;">${item.title}</span>
+                                    <div style="display: flex; flex: 3;">
+                                        <span>${item.startTime} ~ ${item.endTime}</span>
+                                        <span>${item.importance}</span>
+                                        <span>${item.importance}</span>
+                                        <button onclick="onDelete('${item.title}')">삭제</button>
+                                        <button onclick="onComplete('${item.title}')">${item.success ? '미완료' : '완료'}</button>
+                                    </div>
+                                </div>
+                                <p>${item.contents}</p>
+                                <p>${item.ext}</p>
+                            </li>`
+                            $('#cardContainer').append(todoCard)
+                        })
+                    }
+                }
+            })
+        }
+        // 삭제
+        function onDelete(title){
+            $.ajax({
+                type:"POST",
+                url:"/todo/delete",
+                data :{'title': title},
+                success:function(response){
+                    if(response["result"] == "success"){
+                        alert(`'${title}'을 삭제했습니다.`)
+                        // 새로고침
+                        window.location.reload()
+                    }
+                }
+            })
+        }
+
+        // 수정
+        function onComplete(title){
+            $.ajax({
+                type:"POST",
+                url:"/todo/complete",
+                data :{'title': title},
+                success:function(response){
+                    if(response["result"] == "success"){
+                        alert(`'${title}'을 완료했습니다.`)
+                        // 새로고침
+                        window.location.reload()
+                    }
+                }
+            })
         }
     </script>
 </head>
@@ -55,7 +126,7 @@
             </div>
             <!-- MIDDLE -->
             <div class="middleContainer">
-                <button id="onAndOffButton" onclick="onAndOff()">등록하기</button>
+                <button id="onAndOffButton" onclick="onAndOff()">등록 폼 열기</button>
                 <div id="formContainer" class="formContainer">
                     <h3>할 일 등록하기</h3>
                     <div style="display: flex; flex-direction: column;">
@@ -73,19 +144,19 @@
                         <div style="display: flex;">
                             <div>
                                 <input type="radio" id="formImportance1" value="1" name="radioText">
-                                <label for="formImportance1">예정</label>
+                                <label for="formImportance1">1</label>
                             </div>
                             <div>
                                 <input type="radio" id="formImportance2" value="2" name="radioText">
-                                <label for="formImportance2">진행중</label>
+                                <label for="formImportance2">2</label>
                             </div>
                             <div>
                                 <input type="radio" id="formImportance3" value="3" name="radioText">
-                                <label for="formImportance3">완료</label>
+                                <label for="formImportance3">3</label>
                             </div>
                             <div>
                                 <input type="radio" id="formImportance4" value="4" name="radioText">
-                                <label for="formImportance4">포기</label>
+                                <label for="formImportance4">4</label>
                             </div>
                         </div>
                         <label for="formExt">기타</label>
@@ -96,7 +167,9 @@
             </div>
             <!-- BOTTOM -->
             <div class="bottomeContainer">
-
+                <ul id="cardContainer">
+                    
+                </ul>
             </div>
         </div>
     </div>

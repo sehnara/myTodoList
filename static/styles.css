@@ -16,6 +16,7 @@
   padding: 20px;
   display: flex;
   flex-direction: column;
+  width: 600px;
 }
 .headerContainer {
   display: flex;
@@ -28,6 +29,6 @@
   display: flex;
 }
 .formContainer {
-  display: flex;
+  display: none;
   flex-direction: column;
 }
